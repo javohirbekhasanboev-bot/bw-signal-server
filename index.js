@@ -4,37 +4,26 @@ const path = require("path");
 const app = express();
 app.use(express.json());
 
-// HTML papkani ulash
-app.use(express.static(path.join(__dirname, "public")));
+// STATIC papkani ulash (MUHIM)
+app.use(express.static("public"));
 
-// Asosiy sahifa
+// TEST uchun root
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
+  res.send("Server ishlayapti 🚀");
 });
 
-// API (fake depozit + signal)
+// API
 app.post("/check", (req, res) => {
   const { id } = req.body;
 
   if (!id) {
-    return res.json({
-      success: false,
-      message: "ID kiritilmadi"
-    });
+    return res.json({ success: false, message: "ID yo‘q" });
   }
 
-  // random depozit (10 - 100$)
   const deposit = Math.floor(Math.random() * 90) + 10;
-
-  // random signal (1 - 5)
   const signal = Math.floor(Math.random() * 5) + 1;
 
-  res.json({
-    success: true,
-    id,
-    deposit,
-    signal
-  });
+  res.json({ success: true, deposit, signal });
 });
 
 const PORT = process.env.PORT || 3000;
