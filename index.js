@@ -4,45 +4,40 @@ const path = require("path");
 const app = express();
 app.use(express.json());
 
-// static papka
-app.use(express.static("public"));
+// HTML papkani ulash
+app.use(express.static(path.join(__dirname, "public")));
 
-const PORT = 3000;
+// Asosiy sahifa
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
 
-// API
+// API (fake depozit + signal)
 app.post("/check", (req, res) => {
   const { id } = req.body;
 
   if (!id) {
     return res.json({
       success: false,
-      message: "ID kiriting"
+      message: "ID kiritilmadi"
     });
   }
 
-  const deposit = Math.floor(Math.random() * 50) + 1;
+  // random depozit (10 - 100$)
+  const deposit = Math.floor(Math.random() * 90) + 10;
 
-  if (deposit < 5) {
-    return res.json({
-      success: false,
-      message: "Depozit 5$ dan kam"
-    });
-  }
-
+  // random signal (1 - 5)
   const signal = Math.floor(Math.random() * 5) + 1;
 
   res.json({
     success: true,
+    id,
     deposit,
     signal
   });
 });
 
-// ROOT → HTML qaytaradi
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
-});
-
+const PORT = 3000;
 app.listen(PORT, () => {
-  console.log("Server ishga tushdi 🚀");
+  console.log("Server ishlayapti 🚀");
 });
