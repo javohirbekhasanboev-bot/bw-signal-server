@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <title>Deposit</title>
+</head>
+<body style="background:black;color:white;text-align:center;padding-top:100px;">
+
+<h1>Deposit tekshiruv</h1>
+
+<input id="id" placeholder="ID yoz" style="padding:10px;font-size:18px;">
+<br><br>
+
+<button onclick="check()" style="padding:10px 20px;font-size:18px;">Tekshirish</button>
+
+<h2 id="result"></h2>
+
+<script>
+async function check(){
+  let id = document.getElementById("id").value;
+
+  let res = await fetch("/check", {
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body: JSON.stringify({id})
+  });
+
+  let data = await res.json();
+
+  if(data.success){
+    document.getElementById("result").innerText =
+      "Deposit: " + data.deposit + "$";
+  } else {
+    document.getElementById("result").innerText = "Topilmadi";
+  }
+}
+</script>
+
+</body>
+</html>
