@@ -4,7 +4,6 @@ const path = require("path");
 const app = express();
 app.use(express.json());
 
-// 🔥 vaqtinchalik database (keyin DB qilamiz)
 let users = {};
 
 // static html
@@ -15,12 +14,14 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-// 🔥 POSTBACK (REAL DATA KELADI)
+// 🔥 POSTBACK (ENG MUHIM)
 app.get("/postback", (req, res) => {
   const id = req.query.id;
-  const amount = req.query.amount || 0;
+  const amount = req.query.amount;
 
-  if (!id) return res.send("No ID");
+  if (!id) {
+    return res.send("NO ID");
+  }
 
   if (!users[id]) {
     users[id] = {
@@ -29,15 +30,15 @@ app.get("/postback", (req, res) => {
     };
   }
 
-  users[id].deposit += parseFloat(amount);
+  users[id].deposit += parseFloat(amount || 0);
   users[id].signal = Math.floor(Math.random() * 5) + 1;
 
-  console.log("NEW DATA:", id, users[id]);
+  console.log("POSTBACK:", id, users[id]);
 
   res.send("OK");
 });
 
-// 🔥 USER TEKSHIRISH
+// check API
 app.post("/check", (req, res) => {
   const { id } = req.body;
 
@@ -48,22 +49,16 @@ app.post("/check", (req, res) => {
     });
   }
 
-  if (!users[id]) {
-    return res.json({
-      success: true,
-      deposit: 0,
-      signal: 0
-    });
-  }
+  const user = users[id] || { deposit: 0, signal: 0 };
 
   res.json({
     success: true,
-    deposit: users[id].deposit,
-    signal: users[id].signal
+    deposit: user.deposit,
+    signal: user.signal
   });
 });
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log("Server ishlayapti 🚀");
 });
