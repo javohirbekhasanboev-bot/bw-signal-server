@@ -4,12 +4,12 @@ const path = require("path");
 const app = express();
 app.use(express.json());
 
-// STATIC papkani ulash (MUHIM)
-app.use(express.static("public"));
+// public papkani ulash
+app.use(express.static(path.join(__dirname, "public")));
 
-// TEST uchun root
+// 🔥 MUHIM: root = index.html
 app.get("/", (req, res) => {
-  res.send("Server ishlayapti 🚀");
+  res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
 // API
