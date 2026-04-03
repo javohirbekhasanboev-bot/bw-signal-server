@@ -1,7 +1,6 @@
 {
   "name": "bw-signal-server",
   "version": "1.0.0",
-  "description": "Signal server",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
