@@ -1,24 +1,21 @@
-app.get("/test", (req, res) => {
-  res.send("TEST OK");
-});
 const express = require("express");
 const path = require("path");
 
 const app = express();
 app.use(express.json());
 
-// 🔥 TEMP DATABASE
+// 🔥 vaqtinchalik database
 let users = {};
 
-// 🔥 TEST ROUTE (tekshirish uchun)
+// 🔥 TEST (tekshirish uchun)
 app.get("/test", (req, res) => {
   res.send("TEST OK");
 });
 
-// 🔥 POSTBACK ROUTE (ENG MUHIM)
+// 🔥 POSTBACK (casino dan keladi)
 app.get("/postback", (req, res) => {
   const id = req.query.id;
-  const amount = req.query.amount;
+  const amount = parseFloat(req.query.amount || 0);
 
   if (!id) {
     return res.send("NO ID");
@@ -31,7 +28,7 @@ app.get("/postback", (req, res) => {
     };
   }
 
-  users[id].deposit += parseFloat(amount || 0);
+  users[id].deposit += amount;
   users[id].signal = Math.floor(Math.random() * 5) + 1;
 
   console.log("POSTBACK:", id, users[id]);
@@ -39,15 +36,15 @@ app.get("/postback", (req, res) => {
   res.send("OK");
 });
 
-// 🔥 STATIC HTML
+// 🔥 STATIC HTML (frontend)
 app.use(express.static(path.join(__dirname, "public")));
 
-// 🔥 HOMEPAGE
+// 🔥 HOME PAGE
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-// 🔥 CHECK API
+// 🔥 USER CHECK API
 app.post("/check", (req, res) => {
   const { id } = req.body;
 
@@ -67,7 +64,7 @@ app.post("/check", (req, res) => {
   });
 });
 
-// 🔥 PORT (Render uchun MUHIM)
+// 🔥 PORT (Render uchun muhim)
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
