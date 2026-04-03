@@ -4,17 +4,15 @@ const path = require("path");
 const app = express();
 app.use(express.json());
 
+// 🔥 TEMP DATABASE
 let users = {};
 
-// static html
-app.use(express.static(path.join(__dirname, "public")));
-
-// homepage
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
+// 🔥 TEST ROUTE (tekshirish uchun)
+app.get("/test", (req, res) => {
+  res.send("TEST OK");
 });
 
-// 🔥 POSTBACK (ENG MUHIM)
+// 🔥 POSTBACK ROUTE (ENG MUHIM)
 app.get("/postback", (req, res) => {
   const id = req.query.id;
   const amount = req.query.amount;
@@ -38,7 +36,15 @@ app.get("/postback", (req, res) => {
   res.send("OK");
 });
 
-// check API
+// 🔥 STATIC HTML
+app.use(express.static(path.join(__dirname, "public")));
+
+// 🔥 HOMEPAGE
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
+
+// 🔥 CHECK API
 app.post("/check", (req, res) => {
   const { id } = req.body;
 
@@ -58,7 +64,9 @@ app.post("/check", (req, res) => {
   });
 });
 
+// 🔥 PORT (Render uchun MUHIM)
 const PORT = process.env.PORT || 3000;
+
 app.listen(PORT, () => {
   console.log("Server ishlayapti 🚀");
 });
