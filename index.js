@@ -2,44 +2,65 @@ const express = require("express");
 const path = require("path");
 
 const app = express();
-
-// JSON parse
 app.use(express.json());
 
-// 🔥 STATIC papka (MUHIM)
+// 🔥 vaqtinchalik database
+let users = {};
+
+// 🔥 HTML papka
 app.use(express.static(path.join(__dirname, "public")));
 
-// 🔥 ROOT sahifa
+// 🔥 asosiy sahifa
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-// TEST
-app.get("/test", (req, res) => {
-  res.send("TEST OK ✅");
+// 🔥 POSTBACK (kazinodan keladi)
+app.get("/postback", (req, res) => {
+  const id = req.query.extid;      // user ID
+  const amount = req.query.amount; // deposit
+
+  console.log("POSTBACK:", id, amount);
+
+  if (!id) return res.send("No ID");
+
+  if (!users[id]) {
+    users[id] = {
+      deposit: 0,
+      signal: 0
+    };
+  }
+
+  // 🔥 deposit qo‘shamiz
+  users[id].deposit += Number(amount || 0);
+
+  // 🔥 signal random (xohlasang o‘zgartiramiz)
+  users[id].signal = Math.floor(Math.random() * 5) + 1;
+
+  res.send("OK");
 });
 
-// API
+// 🔥 USER CHECK
 app.post("/check", (req, res) => {
   const { id } = req.body;
 
-  if (!id) {
-    return res.json({ success: false, message: "ID yo‘q" });
-  }
+  const user = users[id];
 
-  const deposit = Math.floor(Math.random() * 90) + 10;
-  const signal = Math.floor(Math.random() * 5) + 1;
+  if (!user) {
+    return res.json({
+      success: false,
+      message: "Topilmadi"
+    });
+  }
 
   res.json({
     success: true,
-    deposit,
-    signal
+    deposit: user.deposit,
+    signal: user.signal
   });
 });
 
-// PORT
-const PORT = process.env.PORT || 3000;
-
+const PORT = 3000;
 app.listen(PORT, () => {
   console.log("Server ishlayapti 🚀");
 });
