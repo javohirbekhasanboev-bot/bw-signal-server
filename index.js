@@ -1,3 +1,6 @@
+app.get("/test", (req, res) => {
+  res.send("TEST OK");
+});
 const express = require("express");
 const path = require("path");
 
