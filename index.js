@@ -36,3 +36,6 @@ app.post("/check", (req, res) => {
 app.listen(PORT, () => {
   console.log("Server ishlayapti 🚀");
 });
+app.get("/", (req, res) => {
+  res.send("Server ishlayapti 🚀");
+});
