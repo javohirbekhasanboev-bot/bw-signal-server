@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <title>Signal App</title>
+</head>
+<body style="background:black;color:white;text-align:center;padding-top:100px;">
+
+  <h1>Signal tekshirish 🚀</h1>
+
+  <input id="id" placeholder="ID kiriting" style="padding:10px;">
+  <br><br>
+
+  <button onclick="check()" style="padding:10px 20px;">Tekshirish</button>
+
+  <h2 id="result"></h2>
+
+  <script>
+    async function check() {
+      let id = document.getElementById("id").value;
+
+      let res = await fetch("/check", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ id })
+      });
+
+      let data = await res.json();
+
+      if (data.success) {
+        document.getElementById("result").innerHTML =
+          "💰 Deposit: $" + data.deposit + "<br>📊 Signal: " + data.signal;
+      } else {
+        document.getElementById("result").innerText = "Xatolik ❌";
+      }
+    }
+  </script>
+
+</body>
+</html>
